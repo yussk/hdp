@@ -27,7 +27,7 @@ class HappyDinnerAPI
     }
 
     public function setkvs($key, $value){
-        $kv = new KV;
+        $kv = new KV();
         try {
              $kv->insert(array('key' => $key, 'value' => $value));
         } catch ( Exception $e ){
@@ -36,6 +36,22 @@ class HappyDinnerAPI
              $kv->update(array('value' => $value), $where);
         }
 
+    }
+    
+    // エラー起きてます・・・
+    public function getCategory() {
+        require_once '../model/Category.class.php';
+        $category = new Category();
+        $select = $category->select()->where('display = ?', 1);
+        $rows = $category->fetchAll($select);
+        $response = array();
+        foreach ($rows as $row) {
+            $response += array(
+                "id"    => $row->id, 
+                "name"  => $row->category_name,
+            );
+        }
+        return $response;
     }
 }
 
